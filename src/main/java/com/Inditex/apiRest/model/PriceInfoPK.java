@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -16,18 +17,23 @@ import java.util.Objects;
 @Setter
 public class PriceInfoPK implements Serializable {
 
+    @NotNull
     @Column(name = "BRAND_ID")
     private Long brandId;
 
+    @NotNull
     @Column(name = "START_DATE")
     private Date startDate;
 
+    @NotNull
     @Column(name = "END_DATE")
     private Date endDate;
 
+    @NotNull
     @Column(name = "PRICE_LIST")
     private Integer priceList;
 
+    @NotNull
     @Column(name = "PRODUCT_ID")
     private Long productId;
 

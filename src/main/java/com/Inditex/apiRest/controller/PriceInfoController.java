@@ -1,14 +1,20 @@
 package com.Inditex.apiRest.controller;
 
 import com.Inditex.apiRest.model.PriceInfo;
-import com.Inditex.apiRest.PriceInfoService;
+import com.Inditex.apiRest.service.PriceInfoService;
 import com.Inditex.apiRest.model.ResultPriceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,13 +23,14 @@ import com.Inditex.apiRest.model.PriceInfoPK;
 
 @RestController
 @RequestMapping("api/priceInfo")
+@Validated
 public class PriceInfoController {
 
     @Autowired
     private PriceInfoService priceInfoService;
 
     @PostMapping
-    public PriceInfo createPriceInfo(@RequestBody PriceInfo priceInfo){
+    public PriceInfo createPriceInfo(@Valid @RequestBody PriceInfo priceInfo){
         try {
             // Verifica si ya existe un registro con los mismos IDs compuestos
             boolean exists = priceInfoService.existsPriceInfo(priceInfo.getId());
@@ -42,22 +49,36 @@ public class PriceInfoController {
         return priceInfoService.getAllPriceInfo();
     }
 
-    @GetMapping("{id}")
-    public PriceInfo searchPriceInfoById(@PathVariable("id") PriceInfoPK id){
-        return priceInfoService.getPriceInfoById(id);
+    @GetMapping("{productId}")
+    public List<PriceInfo> searchPriceInfoByProductId(@PathVariable("productId") String productId){
+        return priceInfoService.getPriceInfoByProductId(productId);
     }
     @DeleteMapping("{id}")
-    public void deletePriceInfoById(@PathVariable("id") PriceInfoPK id){
-        priceInfoService.deletePriceInfo(id);
+    public void deletePriceInfoByProductId(@PathVariable("id") String productId){
+        priceInfoService.deletePriceInfo(productId);
     }
 
     @GetMapping("calculatePrice")
-    public ResponseEntity<ResultPriceInfo> calculatePrice(
-            @RequestParam("applicationDate") @DateTimeFormat(pattern = "dd/MM/yyyy") Date intervalDate,
-            @RequestParam("productId") Long productId,
-            @RequestParam("brandId") Long brandId) {
+    public ResponseEntity<Object> calculatePrice(
+            @RequestParam("applicationDate") @Valid @NotNull(message = "The applicationDate field cannot be null")
+            String intervalDate,
+            @RequestParam("productId") @Valid @NotNull(message = "The productId field cannot be null")
+            @Positive(message = "ProductID must be positive") Long productId,
+            @RequestParam("brandId") @NotNull(message = "The brandId field cannot be null")
+            @Positive(message = "BrandID must be positive") Long brandId) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date combinedIntervalDate;
+
         try {
-            PriceInfo calculationResult = priceInfoService.calculatePrice(intervalDate, productId, brandId);
+            combinedIntervalDate = dateFormat.parse(intervalDate);
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomErrorResponse("Invalid date format. The correct format is: dd/MM/yyyy HH:mm:ss"));
+        }
+
+
+        try {
+            PriceInfo calculationResult = priceInfoService.calculatePrice(combinedIntervalDate, productId, brandId);
 
             ResultPriceInfo result = new ResultPriceInfo();
 
@@ -73,8 +94,10 @@ public class PriceInfoController {
 
             return ResponseEntity.ok(result);
         } catch (NoPriceInfoFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            String errorMessage = "Product not found, please try another search with others parameters";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomErrorResponse(errorMessage));
         }
+
     }
 
 }

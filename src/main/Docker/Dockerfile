@@ -5,7 +5,7 @@ FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /app
 
 # Copia el archivo JAR de tu aplicación a la imagen
-COPY target/nombre-de-tu-app.jar app.jar
+COPY target/apirest-0.0.1-SNAPSHOT.jar app.jar
 
 # Expone el puerto en el que tu aplicación escucha
 EXPOSE 8080

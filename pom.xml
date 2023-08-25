@@ -11,8 +11,8 @@
 	<groupId>com.Inditex</groupId>
 	<artifactId>apirest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>apirest</name>
-	<description>ApiRest to check the price of a Inditex product</description>
+	<name>api-rest</name>
+	<description>ApiRest to check the price of an Inditex product</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -50,10 +50,24 @@
 
 
 		<dependency>
-		<groupId>org.springdoc</groupId>
-		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-		<version>2.0.2</version>
-	</dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -70,32 +84,32 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>1.2.0</version>
-				<executions>
-					<execution>
-						<id>build-image</id>
-						<goals>
-							<goal>build</goal>
-						</goals>
-						<phase>install</phase>
-						<configuration>
-							<imageName>Inditex-ApiRest</imageName>
-							<dockerDirectory>src/main/docker</dockerDirectory>
-							<dockerHost>http://localhost:2375</dockerHost>
-							<resources>
-								<resource>
-									<targetPath>/</targetPath>
-									<directory>${project.build.directory}</directory>
-									<include>${project.build.finalName}.jar</include>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>com.spotify</groupId>-->
+<!--				<artifactId>docker-maven-plugin</artifactId>-->
+<!--				<version>1.2.2</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>build-image</id>-->
+<!--						<goals>-->
+<!--							<goal>build</goal>-->
+<!--						</goals>-->
+<!--						<phase>install</phase>-->
+<!--						<configuration>-->
+<!--							<imageName>Inditex-ApiRest</imageName>-->
+<!--							<dockerDirectory>src/main/docker</dockerDirectory>-->
+<!--							<dockerHost>http://localhost:2375</dockerHost>-->
+<!--							<resources>-->
+<!--								<resource>-->
+<!--									<targetPath>/</targetPath>-->
+<!--									<directory>${project.build.directory}</directory>-->
+<!--									<include>${project.build.finalName}.jar</include>-->
+<!--								</resource>-->
+<!--							</resources>-->
+<!--						</configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 

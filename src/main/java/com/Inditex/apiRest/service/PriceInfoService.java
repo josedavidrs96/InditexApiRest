@@ -1,4 +1,4 @@
-package com.Inditex.apiRest;
+package com.Inditex.apiRest.service;
 
 
 import com.Inditex.apiRest.model.PriceInfo;
@@ -21,11 +21,6 @@ public class PriceInfoService {
         return priceInfoRepository.save(priceInfo);
     }
 
-    public PriceInfo getPriceInfoById(PriceInfoPK id){
-        Optional<PriceInfo> optionalPriceInfo = priceInfoRepository.findById(id);
-        return optionalPriceInfo.get();
-    }
-
     public boolean existsPriceInfo(PriceInfoPK priceInfoPK) {
 
         return priceInfoRepository.existsById(priceInfoPK);
@@ -34,21 +29,23 @@ public class PriceInfoService {
         return priceInfoRepository.findAll();
     }
 
-    public void deletePriceInfo(PriceInfoPK id){
-        priceInfoRepository.deleteById(id);
+    public void deletePriceInfo(String productId){
+        priceInfoRepository.deleteAllByProductId(productId);
     }
 
     public PriceInfo calculatePrice(Date intervalDate, Long productId, Long brandId) {
-        // Obtener el PriceInfo correspondiente para los parámetros dados
-        PriceInfo resultPriceInfo = priceInfoRepository.findPriceInfoByProductIdAndIntervalDateAndBrandId(productId,intervalDate, brandId);
+
+
+        PriceInfo resultPriceInfo = priceInfoRepository.findHighestPriorityPriceInfo(productId,intervalDate, brandId);
 
         if (resultPriceInfo == null) {
-            throw new NoPriceInfoFoundException("No se encontró información de precio para los parámetros proporcionados");
+            throw new NoPriceInfoFoundException("The price information was not found for the provided parameters.");
         }
-
-        // Realizar el cálculo del precio final (usando los campos necesarios del PriceInfo)
 
         return resultPriceInfo;
     }
 
+    public List<PriceInfo> getPriceInfoByProductId(String productId) {
+        return priceInfoRepository.findAllByProductId(productId);
+    }
 }
