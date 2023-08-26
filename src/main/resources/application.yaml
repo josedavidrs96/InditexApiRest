@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true           # Habilita la consola H2 (opcional)
+
+  jpa:
+    hibernate:
+      ddl-auto: update         # Actualiza automáticamente la estructura de la base de datos
+    show-sql: true             # Muestra las consultas SQL en la consola (opcional)
