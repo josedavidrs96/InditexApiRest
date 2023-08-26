@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.0.2</version>
+			<version>2.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -84,32 +84,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-<!--			<plugin>-->
-<!--				<groupId>com.spotify</groupId>-->
-<!--				<artifactId>docker-maven-plugin</artifactId>-->
-<!--				<version>1.2.2</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<id>build-image</id>-->
-<!--						<goals>-->
-<!--							<goal>build</goal>-->
-<!--						</goals>-->
-<!--						<phase>install</phase>-->
-<!--						<configuration>-->
-<!--							<imageName>Inditex-ApiRest</imageName>-->
-<!--							<dockerDirectory>src/main/docker</dockerDirectory>-->
-<!--							<dockerHost>http://localhost:2375</dockerHost>-->
-<!--							<resources>-->
-<!--								<resource>-->
-<!--									<targetPath>/</targetPath>-->
-<!--									<directory>${project.build.directory}</directory>-->
-<!--									<include>${project.build.finalName}.jar</include>-->
-<!--								</resource>-->
-<!--							</resources>-->
-<!--						</configuration>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
 		</plugins>
 	</build>
 

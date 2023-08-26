@@ -1,10 +1,17 @@
 package com.Inditex.apiRest.controller;
 
 import com.Inditex.apiRest.model.PriceInfo;
-import com.Inditex.apiRest.service.PriceInfoService;
+import com.Inditex.apiRest.model.PriceInfoPK;
 import com.Inditex.apiRest.model.ResultPriceInfo;
+import com.Inditex.apiRest.service.PriceInfoService;
+import io.swagger.annotations.Api;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,23 +19,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
-import com.Inditex.apiRest.model.PriceInfoPK;
-
 @RestController
 @RequestMapping("api/priceInfo")
 @Validated
+@Tag(name = "Price Information")
 public class PriceInfoController {
 
     @Autowired
     private PriceInfoService priceInfoService;
 
+    @Operation( description = "Create a PriceInfo of a product based on parameters",
+                summary = "This method will create a price info in the embedded database with valid parameters")
     @PostMapping
     public PriceInfo createPriceInfo(@Valid @RequestBody PriceInfo priceInfo){
         try {
@@ -44,21 +50,34 @@ public class PriceInfoController {
         }
     }
 
+
+    @Operation( description = "Get the information of all PriceInfo in the database",
+                summary = "This method will get all the price info in the embedded database without parameters")
     @GetMapping
     public List<PriceInfo> getAllPriceInfo(){
         return priceInfoService.getAllPriceInfo();
     }
 
+
+
+    @Operation( description = "Get historical prices of a product filtering by productId",
+                summary = "This method will get a price info in the embedded database with valid parameters")
     @GetMapping("{productId}")
     public List<PriceInfo> searchPriceInfoByProductId(@PathVariable("productId") String productId){
         return priceInfoService.getPriceInfoByProductId(productId);
     }
+
+    @Operation( description = "Delete a PriceInfo of a product filtering by productId",
+            summary = "This method will delete a price info in the embedded database with valid parameters")
     @DeleteMapping("{id}")
     public void deletePriceInfoByProductId(@PathVariable("id") String productId){
         priceInfoService.deletePriceInfo(productId);
     }
 
-    @GetMapping("calculatePrice")
+
+    @Operation( description = "Get the PriceInfo of a product based on parameters",
+            summary = "This method will get a price info in the embedded database with valid parameters")
+    @GetMapping(value = "calculatePrice", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> calculatePrice(
             @RequestParam("applicationDate") @Valid @NotNull(message = "The applicationDate field cannot be null")
             String intervalDate,
